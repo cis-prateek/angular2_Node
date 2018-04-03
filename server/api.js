@@ -74,23 +74,31 @@ router.post('/register', (req, res) => {
 
 
 router.post('/login', (req, res) => {
-    User.find({ email: req.body.email }, function (err, user) {
-        
-        bcrypt.compare(req.body.password, user[0]['password'], function (err, result) {
-       
-            if (result) {
-                return res.json({
-                    statusCode: 200,
-                    data:user 
-                })
-            }
-            else {
-                   return res.json({
-                    statusCode: 400
-                }); 
-            }
+    console.log("req.body", req.body)
+    if (typeof req.body === "undefined" && req.body.email && req.body.password) {
+        User.find({ email: req.body.email }, function (err, user) {
+
+            bcrypt.compare(req.body.password, user[0]['password'], function (err, result) {
+
+                if (result) {
+                    return res.json({
+                        statusCode: 200,
+                        data: user
+                    })
+                }
+                else {
+                    return res.json({
+                        statusCode: 400
+                    });
+                }
+            });
+        })
+    } else {
+        res.status(200).json({
+            data: "Data is missing",
+            error: 1
         });
-    })
+    }
 });
 
 
@@ -102,22 +110,22 @@ router.put('/update', (req, res) => {
 
             var newData = hash
 
-            User.update({ _id: req.body.id }, { $set: { 'password': hash }})
-            .exec()
-            .then(result => {
-                res.status(200).json({
-                    message: "Product Updated",
-                    request: {
-                        url: 'http://localhost:3000/update/' + req.body.id
-                    }
+            User.update({ _id: req.body.id }, { $set: { 'password': hash } })
+                .exec()
+                .then(result => {
+                    res.status(200).json({
+                        message: "Product Updated",
+                        request: {
+                            url: 'http://localhost:3000/update/' + req.body.id
+                        }
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.status(500).json({
+                        error: err
+                    });
                 });
-            })
-            .catch(err => {
-                console.log(err);
-                res.status(500).json({
-                    error: err
-                });
-            });
         });
     });
 });
