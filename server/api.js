@@ -58,6 +58,7 @@ router.post('/register', (req, res) => {
 
             var newData = new User({
                 email: req.body.email,
+                name: req.body.name,
                 password: hash
             });
 
@@ -75,11 +76,13 @@ router.post('/register', (req, res) => {
 
 router.post('/login', (req, res) => {
     console.log("req.body", req.body)
-    if (typeof req.body === "undefined" && req.body.email && req.body.password) {
-        User.find({ email: req.body.email }, function (err, user) {
+    // if (typeof req.body === "undefined" && req.body.email && req.body.password) {
+    User.find({ email: req.body.email }, function (err, user) {
+        console.log("UserData-->", user);
+        if (user.length != 0) {
 
             bcrypt.compare(req.body.password, user[0]['password'], function (err, result) {
-
+                console.log("result-->", result);
                 if (result) {
                     return res.json({
                         statusCode: 200,
@@ -92,13 +95,20 @@ router.post('/login', (req, res) => {
                     });
                 }
             });
-        })
-    } else {
-        res.status(200).json({
-            data: "Data is missing",
-            error: 1
-        });
-    }
+        }
+        else {
+            return res.json({
+                statusCode: 400
+            })
+        }
+    })
+    // }
+    //  else {
+    // res.status(200).json({
+    //     data: "Data is missing",
+    //     error: 1
+    // });
+    // }
 });
 
 
@@ -106,7 +116,7 @@ router.post('/login', (req, res) => {
 router.put('/update', (req, res) => {
     bcrypt.genSalt(10, function (err, salt) {
 
-        bcrypt.hash(req.body.password, salt, function (err, hash) {
+        bcrypt.hash(req.body.newPassword, salt, function (err, hash) {
 
             var newData = hash
 
@@ -115,9 +125,7 @@ router.put('/update', (req, res) => {
                 .then(result => {
                     res.status(200).json({
                         message: "Product Updated",
-                        request: {
-                            url: 'http://localhost:3000/update/' + req.body.id
-                        }
+                        data: req.body
                     });
                 })
                 .catch(err => {

@@ -1,9 +1,9 @@
 <div class="jumbotron" align="center">
-    <img src="assets/images/welcome.jpg" width="50%" height="50%"/>
+  <img src="assets/images/welcome.jpg" width="50%" height="50%" />
 
 </div>
 <div class="btn pull-right">
-  <button type="button" id="logOut" name="button" class="btn btn-danger" (click)="logOut()">LogOut</button>
+  <button type="button" id="logOut" name="button" class="btn btn-danger" data-toggle="modal" data-target="#logOutModal">LogOut</button>
 </div>
 <div class="container">
   <div>
@@ -16,14 +16,14 @@
     <p></p>
     <div>
       <b>Email:</b> &nbsp;&nbsp;&nbsp;
-      <b>{{email}}</b>
+      <b style="padding-bottom:10px">{{email}}</b>
     </div>
   </div>
   <div class="page-header">
     <p></p>
     <div>
-      <b>Password:</b> &nbsp;&nbsp;&nbsp;
-      <b>{{password}}</b>
+      <b>Name:</b> &nbsp;&nbsp;&nbsp;
+      <b>{{name}}</b>
     </div>
   </div>
   <br/>
@@ -33,32 +33,48 @@
     <form class="form-horizontal" #editForm="ngForm">
       <div class="form-group">
         <label class="control-label col-sm-2" for="email">Email:</label>
-        <div class="col-sm-10">
+        <div style="padding:6px" class="col-sm-10">
           {{email}}
         </div>
       </div>
 
       <div class="form-group">
-        <label class="control-label col-sm-2" for="pwd">Password:</label>
+        <label class="control-label col-sm-2" for="Oldpwd">Old Password:</label>
         <div class="col-sm-10">
-          <input type="password" class="form-control" name="password" id="password" [(ngModel)]="password" placeholder="Enter Password...">
+          <input type="password" class="form-control" name="oldPassword" id="oldPassword" [(ngModel)]="editForm.oldPassword" placeholder="Enter old password...">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="Newpwd">New password:</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" name="newPassword" id="newPassword" [(ngModel)]="editForm.newPassword" placeholder="Enter New password...">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="Confirmpwd">Confirm Password:</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" [(ngModel)]="editForm.confirmPassword" placeholder="Enter confirm password...">
         </div>
       </div>
 
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
           <input id="submitbutton" type="submit" value="Update" class="btn btn-success" (click)="update(editForm)" />
+          <input style="margin-left: 20px;" id="submitbutton" type="submit" value="back" class="btn btn-info" (click)="back()" />
         </div>
       </div>
     </form>
   </div>
+
   <br/>
-  <p id="profile">
-    <button type="button" class="btn btn-info" (click)="edit()">
+  <p *ngIf="action == true">
+    <button data-toggle="tooltip" data-placement="top" title="Edit Profile" type="button" class="btn btn-info" (click)="edit()">
       <span class="glyphicon glyphicon-pencil"></span>
     </button>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button type="button" class="btn btn-info" (click)="delete()">
+    <button data-toggle="tooltip" data-placement="top" title="Delete Profile" type="button" class="btn btn-info" (click)="delete()">
       <span class="glyphicon glyphicon-trash"></span>
     </button>
   </p>
@@ -66,7 +82,7 @@
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-      
+
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
@@ -82,5 +98,25 @@
       </div>
     </div>
   </div>
-  
+
+  <!-- Modal -->
+  <div class="modal fade" id="logOutModal" data-keyboard="false" data-backdrop="static" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" (click)="logOut()" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+          <p>you have successfully logged out</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" (click)="logOut()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

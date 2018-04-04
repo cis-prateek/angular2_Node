@@ -7,15 +7,31 @@
     <div class="form-group">
       <label class="control-label col-sm-2" for="email">Email:</label>
       <div class="col-sm-10">
-        <input type="email" class="form-control" name="email" id="email" [(ngModel)]="registrationForm.email" placeholder="Enter email...">
+        <input type="text" class="form-control" name="email" id="email" [(ngModel)]="registrationForm.email" placeholder="Enter email...">
       </div>
     </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="name">Name:</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="name" id="name" [(ngModel)]="registrationForm.name" placeholder="Enter Name...">
+      </div>
+    </div>
+
     <div class="form-group">
       <label class="control-label col-sm-2" for="password">Password:</label>
       <div class="col-sm-10">
         <input type="password" class="form-control" name="password" id="password" [(ngModel)]="registrationForm.password" placeholder="Enter Password...">
       </div>
     </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="confirmPassword">Confirm Password:</label>
+      <div class="col-sm-10">
+        <input type="password" class="form-control" name="confirmPass" id="confirmPass" [(ngModel)]="registrationForm.confirmPass" placeholder="Enter Confirm Password...">
+      </div>
+    </div>
+
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
         <input id="submitbutton" type="submit" value="Submit" class="btn btn-success" (click)="register(registrationForm)" />&nbsp;&nbsp;&nbsp;&nbsp;
@@ -43,4 +59,25 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal -->
+  <div class="modal fade" data-keyboard="false" data-backdrop="static" id="registerModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" (click)="navigaeLoginPage()" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+          <p>Succesfully Registered</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" (click)="navigaeLoginPage()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

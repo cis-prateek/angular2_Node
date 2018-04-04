@@ -20,36 +20,45 @@ export class RegistrationComponent implements OnInit {
 
   register(registerForm) {
 
+    console.log("registerForm--->", registerForm);
+
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(registerForm.email)) {
 
       if (registerForm.password.length >= 3) {
 
-        this.isEmailExist.isEmailExist(registerForm.email)
-          .subscribe(response => {
+        if (registerForm.password == registerForm.confirmPass) {
+          this.isEmailExist.isEmailExist(registerForm.email)
+            .subscribe(response => {
 
-            if (response['data'].length > 0) {
-              this.message = "Email Already Exist"
-              jQuery('#myModal').modal('show');
-            }
-            else {
-              const Userdata = {
-                email: registerForm.email,
-                password: registerForm.password
+              if (response['data'].length > 0) {
+                this.message = "Email Already Exist"
+                jQuery('#myModal').modal('show');
               }
-              this.registrationService.register(Userdata)
-                .subscribe(response => {
-                  if (response == 201) {
-                    this.message = "Succesfully Registered";
-                    jQuery('#myModal').modal('show');
+              else {
+                const Userdata = {
+                  email: registerForm.email,
+                  name: registerForm.name,
+                  password: registerForm.password,
+                }
+                this.registrationService.register(Userdata)
+                  .subscribe(response => {
+                    if (response == 201) {
+                      this.message = "Succesfully Registered";
+                      jQuery('#registerModal').modal('show');
 
-                    setTimeout(() => {
-                      jQuery('#myModal').modal('hide');
-                      this.router.navigate(['login']);
-                    }, 1000);
-                  }
-                });
-            }
-          });
+                      // setTimeout(() => {
+                      // jQuery('#myModal').modal('hide');
+                      // this.router.navigate(['login']);
+                      // }, 1500);
+                    }
+                  });
+              }
+            });
+        }
+        else {
+          this.message = "Password not matched";
+          jQuery('#myModal').modal('show');
+        }
       }
       else {
         this.message = "Password Must Be at Least 3 digit Long";
@@ -61,6 +70,12 @@ export class RegistrationComponent implements OnInit {
       jQuery('#myModal').modal('show');
     }
   }
+
+  navigaeLoginPage() {
+    jQuery('#registerModal').modal('hide');
+    this.router.navigate(['login']);
+  }
+
   backToLogin() {
     this.router.navigate(['login']);
   }

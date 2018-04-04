@@ -10,7 +10,7 @@ declare var jQuery: any;
   styleUrls: ['./login-page.component.css']
 })
 export class LoginPageComponent implements OnInit {
-
+  public message: string;
   constructor(private isUserValid: ValidUserService, private router: Router) {
     if (localStorage.getItem("currentUser") != null) {
       this.router.navigate(['welcome']);
@@ -19,43 +19,67 @@ export class LoginPageComponent implements OnInit {
 
   ngOnInit() { }
 
-  login(loginForm: LoginForm) {
+  login(loginForm) {
+
+
     const Userdata = {
       email: loginForm.email,
       password: loginForm.password
     };
-     if (loginForm.password == null || loginForm.email == null ) {
-       jQuery('#myModal').modal('show');
-       return false;          
-     }
 
-    this.isUserValid.isValidUser(Userdata)
-      .subscribe(response => {
+    if (loginForm.password == null || loginForm.email == null) {
+      this.message = "Email and Password cant be null";
+      jQuery('#myModal').modal('show');
+      return false;
+    }
 
-        if (response["statusCode"] == 200) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(Userdata.email)) {
 
-          if (response['data'].length > 0) {
+      if (Userdata.password.length >= 3) {
 
-            const userEmail: string = response["data"][0]["email"];
-            const userPassword: string = Userdata.password;
-            const userId: string = response["data"][0]["_id"];
+        this.isUserValid.isValidUser(Userdata)
+          .subscribe(response => {
 
-            const currentUserData = {
-              email: userEmail,
-              password: userPassword,
-              id: userId
+            if (response["statusCode"] == 200) {
+
+              if (response['data'].length > 0) {
+
+                const userEmail: string = response["data"][0]["email"];
+                const name:string = response["data"][0]["name"];
+                const userPassword: string = Userdata.password;
+                const userId: string = response["data"][0]["_id"];
+
+                const currentUserData = {
+                  email: userEmail,
+                  name: name,
+                  password: userPassword,
+                  id: userId
+                }
+                localStorage.setItem("currentUser", JSON.stringify(currentUserData));
+                this.router.navigate(['welcome']);
+              }
+              else {
+                this.message = "Incorrect Credentials";
+                jQuery('#myModal').modal('show');
+              }
             }
-            localStorage.setItem("currentUser", JSON.stringify(currentUserData));
-            this.router.navigate(['welcome']);
-          }
-          else {
-            jQuery('#myModal').modal('show');
-          }
-        }
-        else {
-          jQuery('#myModal').modal('show');
-        }
-      });
+            else {
+              this.message = "Incorrect Email and Password";
+              jQuery('#myModal').modal('show');
+            }
+          });
+      }
+      else {
+        this.message = "Incorrect Password";
+        jQuery('#myModal').modal('show');
+      }
+    }
+    else {
+      this.message = "Fill correct Email and Password";
+      jQuery('#myModal').modal('show');
+      return false;
+    }
+
   }
 
   backToLogin() {
